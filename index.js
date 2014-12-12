@@ -6,16 +6,34 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
+var count = 0;  // 人数
+var roomlist = {};
+
 io.on('connection', function(socket){
-  console.log('a user connected');
+  count++;
+  console.log('a user connected: ' + count);
 
   socket.on('disconnect', function(){
-    console.log('user disconnected');
+    count--;
+    console.log('user disconnected: ' + count);
+  });
+
+  socket.on('enter', function(enterdata){
+    var roomname = enterdata.value;
+    if(!roomlist[roomname]){
+      console.log('no such room');
+      roomlist[roomname] = 1;
+    } else {
+      console.log('already exist');
+      roomlist[roomname]++;
+    }
+    socket.join(roomname);
   });
 
   socket.on('chat message', function(msg){
-    // console.log('message: ' + msg);
-    io.emit('chat message', msg);
+    // console.log(socket.rooms);
+    var room = socket.rooms[1];
+    io.to(room).emit('chat message', msg);
   });
 });
 
