@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <title>test02</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--   <meta name="viewport" content="width=device-width, initial-scale=2.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes"> -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html{
+      overflow: hidden;
+      height: 100%;
+    }
+    body {
+      font: 13pt Helvetica, Arial;
+      background-color: #FFFA00;
+    }
+    .c {
+      text-align: center;
+    }
+    .bg_candidate {
+      width: 100%;
+      height: 20%;
+    }
+    .output {
+      position :absolute;
+      font-size: 15pt;
+      top: 0;
+      left: 0;
+    }
+    .color_wheel {
+      width: 80%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+    }
+    .color_wheel img{
+      width: 100%;
+    }
+  </style>
+  <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="libs/victor.min.js"></script>
+  <script src="test03.js"></script>
+</head>
+<body>
+  <div class="bg_candidate" style="background:#F00"></div>
+  <div class="bg_candidate" style="background:#FF0"></div>
+  <div class="bg_candidate" style="background:#0F0"></div>
+  <div class="bg_candidate" style="background:#0FF"></div>
+  <div class="bg_candidate" style="background:#00F"></div>
+  <pre class="output">output</pre>
+  <div class="color_wheel">
+    <img src="assets/cw_600.png"/>
+  </div>
+</body>
+</html>
