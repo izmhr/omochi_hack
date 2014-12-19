@@ -73,6 +73,12 @@ io.on('connection', function(socket){
     var room = socket.rooms[1]; // 0 is default, 1 is the first.
     io.to(room).emit('chat message', msg);
   });
+
+  socket.on('bg change', function(data){
+    var room = socket.rooms[1];
+    console.log('bg change');
+    io.to(room).emit('bg change', data);
+  });
 });
 
 http.listen(3000, function(){

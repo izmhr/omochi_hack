@@ -2,9 +2,69 @@
 <html>
 <head>
   <title>controller</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--   <meta name="viewport" content="width=device-width, initial-scale=2.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes"> -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html{
+      overflow: hidden;
+      height: 100%;
+    }
+    body {
+      font: 13pt Helvetica, Arial;
+      background-color: #FFFA00;
+    }
+    .c {
+      text-align: center;
+    }
+    .bg_candidate {
+      width: 100%;
+      height: 20%;
+      background-size: 100%;
+    }
+    .output {
+      position :absolute;
+      font-size: 15pt;
+      top: 0;
+      left: 0;
+    }
+    .color_wheel {
+      width: 80%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+    }
+    .color_wheel img{
+      width: 100%;
+    }
+
+    #in {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    #bg1 {
+      background-image: url('bg/convoke.jpg');
+    }
+    #bg2 {
+      background-image: url('bg/origami.jpg');
+    }
+    #bg3 {
+      background-image: url('bg/tsuru.jpg');
+    }
+    #bg4 {
+      background-image: url('bg/convoke.jpg');
+    }
+    #bg5 {
+      background-image: url('bg/origami.jpg');
+    }
 
     #newinput { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
     #newinput input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
@@ -13,42 +73,30 @@
     #messages li { padding: 5px 10px; }
     #messages li:nth-child(odd) { background: #eee; }
   </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src='controller.js'></script>
 </head>
 <body>
-  <p>controller</p>
-  <form action="" id="joinlight">
-    <input id="l"/><button>connect</button>
-  </form>
+  <div id="in">
+    <p>controller</p>
+    <form action="" id="joinlight">
+      <input id="l"/><button>connect</button>
+    </form>
+  </div>
   <ul id="messages"></ul>
   <form action="" id="newinput">
     <input id="m" autocomplete="off" /><button>Send</button>
   </form>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script>
-    var socket = io();
 
-    $('#newinput').submit(function(){
-      socket.emit('chat message', $('#m').val());
-      $('#m').val('');
-      return false;
-    });
-
-    $('#joinlight').submit(function(){
-      var lightname = $('#l').val();
-      socket.emit('join light', {value: lightname});
-      return false;
-    });
-
-    socket.on('chat message', function(msg){
-      $('#messages').append($('<li>').text(msg));
-    });
-
-    socket.on('destroyed', function(){
-      $('#messages').append($('<li>').text('target light is destroyed'));
-      socket.emit('leave light');
-    });
-
-  </script>
+  <div class="bg_candidate" id='bg1'></div>
+  <div class="bg_candidate" id='bg2'></div>
+  <div class="bg_candidate" id='bg3'></div>
+  <div class="bg_candidate" id='bg4'></div>
+  <div class="bg_candidate" id='bg5'></div>
+  <pre class="output">output</pre>
+  <div class="color_wheel">
+    <img src="assets/cw_600.png"/>
+  </div>
 </body>
 </html>

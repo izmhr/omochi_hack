@@ -2,9 +2,47 @@
 <html>
 <head>
   <title>light</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--   <meta name="viewport" content="width=device-width, initial-scale=2.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes"> -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html{
+      overflow: hidden;
+      height: 100%;
+    }
+    body {
+      font: 13pt Helvetica, Arial;
+      background-color: #FFFA00;
+      background-size: cover;
+    }
+    .c {
+      text-align: center;
+    }
+    #bg1 {
+      background-image: url('bg/convoke.jpg');
+    }
+    #bg2 {
+      background-image: url('bg/origami.jpg');
+    }
+    #bg3 {
+      background-image: url('bg/tsuru.jpg');
+    }
+    #bg4 {
+      background-image: url('bg/convoke.jpg');
+    }
+    #bg5 {
+      background-image: url('bg/origami.jpg');
+    }
+    #in {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
     #newinput { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
     #newinput input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
     #newinput button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
@@ -12,34 +50,20 @@
     #messages li { padding: 5px 10px; }
     #messages li:nth-child(odd) { background: #eee; }
   </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+  <script src="libs/victor.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="light.js"></script>
 </head>
 <body>
-  <p>light</p>
-  <form action="" id="makelight">
-    <input id="l"/><button>make light</button>
-  </form>
+  <div id="in">
+    <p>light</p>
+    <form action="" id="makelight">
+      <input id="l"/><button>make light</button>
+    </form>
+  </div>
   <ul id="messages"></ul>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script>
-    var socket = io();
-    var lightname;
-
-    $('#makelight').submit(function(){
-      lightname = $('#l').val();
-      socket.emit('make light', {value: lightname});
-      return false;
-    });
-
-    socket.on('chat message', function(msg){
-      $('#messages').append($('<li>').text(msg));
-    });
-
-    window.onbeforeunload = function(){
-      socket.emit('destroy light', {value: lightname});
-      alert('onunload');
-    }
-
-  </script>
+  <canvas id="testCanvas"></canvas>
 </body>
 </html>
