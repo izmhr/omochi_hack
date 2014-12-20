@@ -1,18 +1,24 @@
 <!doctype html>
 <html>
 <head>
-  <title>Socket.IO chat</title>
+  <title>OMOCHI HACK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!--   <meta name="viewport" content="width=device-width, initial-scale=2.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=yes"> -->
+  <!-- <link rel="manifest" href="manifest.json"> -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-
-    #newinput { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    #newinput input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    #newinput button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body, html{
+      overflow: hidden;
+      height: 100%;
+      background-color: '#FF3333';
+    }
   </style>
+  <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
+  <script src="index.js"></script>
 </head>
 <body>
   <a href='/controller'>controller</a>
