@@ -4,6 +4,11 @@ function init()
     e.preventDefault();
   });
 
+  var bgs_height = $('body').height() - $('.header').height();
+  $('.bgs').height(bgs_height);
+
+  $('#joinlight input').focus();
+
   var socket = io();
 
   $('.color_wheel img').on('touchmove', function(event){
@@ -28,6 +33,14 @@ function init()
     return false;
   });
 
+  $('#back').on('touchend', function() {
+    $('.setup').fadeIn();
+  });
+
+  $('#backhome').submit(function(){
+    return true;
+  });
+
   $('.bg_candidate').on('touchend', function(event){
     var type = this.id;
     console.log('bg change' + type);
@@ -42,7 +55,10 @@ function init()
   });
 
   $('#joinlight').submit(function(){
+    $('.setup').fadeOut();
+
     var lightname = $('#l').val();
+    $('#lightname').text(lightname);
     socket.emit('join light', {value: lightname});
     return false;
   });

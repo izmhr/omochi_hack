@@ -10,17 +10,40 @@
     * {
       margin: 0;
       padding: 0;
+      font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
     }
     body, html{
       overflow: hidden;
       height: 100%;
     }
     body {
-      font: 13pt Helvetica, Arial;
       background-color: #FFFA00;
+      color: white;
     }
     .c {
       text-align: center;
+    }
+    .header {
+      width: 100%;
+      height: 50px;
+      background-color: #FF3333;
+    }
+    .header #back {
+      font-size: 12pt;
+      line-height: 50px;
+      vertical-align: middle;
+      margin-left: 12pt;
+    }
+    .header #lightname {
+      font-size: 12pt;
+      line-height: 50pt;
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+    }
+    .bgs {
+      width: 100%;
     }
     .bg_candidate {
       width: 100%;
@@ -31,12 +54,12 @@
       position :absolute;
       font-size: 15pt;
       top: 0;
-      left: 0;
+      right: 0;
     }
     .color_wheel {
       width: 80%;
       position: absolute;
-      top: 50%;
+      top: 55%;
       left: 50%;
       -webkit-transform: translate(-50%, -50%);
     }
@@ -44,10 +67,56 @@
       width: 100%;
     }
 
-    #in {
+    .setup {
+      text-align: center;
       position: absolute;
       top: 0;
       right: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      /*visibility: hidden;*/
+    }
+
+    .setup h2 {
+      margin-top: 10%;
+      font-size: 24pt;
+      letter-spacing: 1em;
+      font-weight: 100;
+      margin-right: -1em;
+      margin-bottom: 10%;
+    }
+
+    .setup input {
+      border: 0;
+      padding: 10px;
+      font-size: 20pt;
+      background-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border: solid 1px #fff;
+      /*border: 0;*/
+      margin: 0 0 20px;
+      width: 60%;
+      min-width: 240px;
+      text-align: center
+    }
+
+    .setup button {
+      /*border: solid 1px #fff;*/
+      border: 0;
+      padding: 10px 20px;
+      margin: 0 0 20px;
+      font-size: 15pt;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    #backhome {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      -webkit-transform: translateX(-50%);
     }
 
     #bg1 {
@@ -66,33 +135,36 @@
       background-image: url('bg/origami.jpg');
     }
 
-    #newinput { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    #newinput input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    #newinput button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script src='controller.js'></script>
 </head>
 <body>
-  <div id="in">
-    <p>controller</p>
-    <form action="" id="joinlight">
-      <input id="l"/><button>connect</button>
-    </form>
+  <div class="header">
+    <p id='back'>&lt;BACK</p>
+    <p id='lightname'>MOCHI MOCHI</p>
   </div>
-
-  <div class="bg_candidate" id='bg1'></div>
-  <div class="bg_candidate" id='bg2'></div>
-  <div class="bg_candidate" id='bg3'></div>
-  <div class="bg_candidate" id='bg4'></div>
-  <div class="bg_candidate" id='bg5'></div>
-  <pre class="output">output</pre>
+  <div class="bgs">
+    <div class="bg_candidate" id='bg1'></div>
+    <div class="bg_candidate" id='bg2'></div>
+    <div class="bg_candidate" id='bg3'></div>
+    <div class="bg_candidate" id='bg4'></div>
+    <div class="bg_candidate" id='bg5'></div>
+  </div>
+  <pre class="output"></pre>
   <div class="color_wheel">
     <img src="assets/cw_600.png"/>
+  </div>
+  <div class="setup">
+    <h2>CONNECT TO OMOCHI</h2>
+    <form action="" id="joinlight">
+      <input id="l"/><br>
+      <button>CONNECT</button><br>
+    </form>
+    <form action="/" id="backhome">
+      <button>BACK HOME</button>
+    </form>
   </div>
 </body>
 </html>
