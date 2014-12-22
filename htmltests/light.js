@@ -1,6 +1,5 @@
 var canvas, stage;
 var circle;
-// var text;
 var update = true;
 var canvasHalfW, canvasHalfH;
 var r;
@@ -19,11 +18,6 @@ function init()
   // enable touch interactions if supported on the current device:
   createjs.Touch.enable(stage);
 
-  // Create a new Text object:
-  // text = new createjs.Text("Hello World!", "36px Arial", "#fff");
-  // text.textAlign = 'center';
-  // text.textBaseline = 'middle';
-
   circle = new createjs.Shape();
   r = 100;
   var g = circle.graphics.beginFill('#fff').drawCircle(canvasHalfW, canvasHalfH, r);
@@ -38,7 +32,6 @@ function init()
   // add the text as a child of the stage. This means it will be drawn any time the stage is updated
   // and that its transformations will be relative to the stage coordinates:
   stage.addChild(circle);
-  // stage.addChild(text);
 
   createjs.Ticker.addEventListener("tick", tick);
 
@@ -51,16 +44,29 @@ function init()
   $('#makelight input').focus();
 
   $('.menu').hide();
+  $('.msg').hide();
   $('#makelight').submit(function(){
-    $('.setup').fadeOut();
-    $('.menu').fadeIn();
-
     lightname = $('#l').val();
-    // text.text = lightname;
-    $('.menu h2').text(lightname);
-    update = true;
+    if(lightname == ''){
+      $('.msg').text('PLEASE INPUT OMOCHI NAME').fadeIn(200).delay(2000).fadeOut();
+      return false;
+    }
     socket.emit('make light', {value: lightname});
     return false;
+  });
+
+  socket.on('make light result', function(ret){
+    if(ret.res == 'self') {
+      $('.setup').fadeOut();
+      $('.menu').fadeIn();      
+    }else if(ret.res == true){
+      $('.setup').fadeOut();
+      $('.menu').fadeIn();
+      $('.menu h2').text(lightname);
+      update = true;
+    } else {
+      $('.msg').text('THE NAME IS ALREADY USED').fadeIn(200).delay(2000).fadeOut();
+    }
   });
 
   $('.menu #back').on('touchend', function(){
@@ -69,7 +75,6 @@ function init()
   });
 
   socket.on('chat message', function(msg){
-    // $('#messages').append($('<li>').text(msg));
     var color = msg;
     var rgb = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
     circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
@@ -93,10 +98,6 @@ function resize() {
   canvas.height = window.innerHeight; //document.height is obsolete
   canvasHalfW = canvas.width/2;
   canvasHalfH = canvas.height/2;
-
-  // position the text on screen, relative to the stage coordinates:
-  // text.x = canvasHalfW;
-  // text.y = canvasHalfH;
 
   circle.graphics.clear().beginFill('#0ff').drawCircle(canvasHalfW, canvasHalfH, r);
 

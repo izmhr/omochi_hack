@@ -114,6 +114,19 @@
       line-height: 11pt;
     }
 
+    .msg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      font-size: 12pt;
+      line-height: 100px;
+      width: 300px;
+      height: 100px;
+      text-align: center;
+    }
+
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
@@ -138,5 +151,6 @@
       <button>BACK HOME</button>
     </form>
   </div>
+  <div class="msg">hogehogehogehoge</div>
 </body>
 </html>

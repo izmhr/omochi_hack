@@ -64,14 +64,28 @@ $('#newinput').submit(function(){
   return false;
 });
 
-$('#joinlight').submit(function(){
-  $('.setup').fadeOut();
-  $('.header').fadeIn();
-
+$('.msg').hide();
+$('#connectlight').submit(function(){
   var lightname = $('#l').val();
-  $('#lightname').text(lightname);
-  socket.emit('join light', {value: lightname});
+  if(lightname == ''){
+    $('.msg').text('PLEASE INPUT OMOCHI NAME').fadeIn(200).delay(2000).fadeOut();
+    return false;
+  }
+  socket.emit('connect light', {value: lightname});
   return false;
+});
+
+socket.on('connectresult', function(ret){
+  if(ret.res == 'self'){
+    $('.setup').fadeOut();
+    $('.header').fadeIn();   
+  }else if(ret.res == true) {
+    $('#lightname').text(ret.lightname);
+    $('.setup').fadeOut();
+    $('.header').fadeIn();
+  } else {
+    $('.msg').text('NO SUCH OMOCHI HERE').fadeIn(200).delay(2000).fadeOut();
+  }
 });
 
   // socket.on('chat message', function(msg){

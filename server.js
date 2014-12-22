@@ -33,14 +33,21 @@ io.on('connection', function(socket){
   // from light
   socket.on('make light', function(data){
     var lightname = data.value;
-    if(!lightlist[lightname]){
+    var ret = {};
+    if(socket.rooms[1] == lightname){
+      // 今使っている部屋の名前おもう一度入れたらそのまま何もしない
+      ret.res = 'self';
+    }else if(!lightlist[lightname]){
       console.log('no such light');
       lightlist[lightname] = 1;
+      ret.res = true;
+      ret.lightname = lightname;
       socket.join(lightname);
     } else {
+      ret.res = false;
       console.log('already exist');
-      socket.emit('light already exist', {msg: 'the light name is already exist'});
     }
+    socket.emit('make light result', ret);
   });
 
   socket.on('destroy light', function(data){
@@ -53,14 +60,27 @@ io.on('connection', function(socket){
   });
 
   // from controller
-  socket.on('join light', function(data){
+  socket.on('connect light', function(data){
     var lightname = data.value;
-    if(!lightlist[lightname]){
+    var ret = {};
+    if(socket.rooms[1] == lightname){
+      // 今使っている部屋にもう一度繋ごうとしたら何もしない
+      ret.res = 'self';
+    }else if(!lightlist[lightname]){
+      // 使っていない
+      ret.res = false;
       console.log('no such light');
     } else {
+      ret.res = true;
+      ret.lightname = lightname;
       console.log('find light');
+      if(socket.rooms.length == 2){
+        console.log('reduce light');
+        socket.leave(socket.rooms[1]);
+      }
       socket.join(lightname);
     }
+    socket.emit('connectresult', ret);
   });
 
   socket.on('leave light', function(){
