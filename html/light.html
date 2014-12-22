@@ -10,15 +10,16 @@
     * {
       margin: 0;
       padding: 0;
+      font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
     }
     body, html{
       overflow: hidden;
       height: 100%;
     }
     body {
-      font: 13pt Helvetica, Arial;
-      background-color: #FFFA00;
+      background-color: #FF3333;
       background-size: cover;
+      color: white;
     }
     .c {
       text-align: center;
@@ -38,17 +39,77 @@
     #bg5 {
       background-image: url('bg/origami.jpg');
     }
-    #in {
+
+    .setup {
+      text-align: center;
       position: absolute;
       top: 0;
       right: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      /*visibility: hidden;*/
     }
-    #newinput { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    #newinput input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    #newinput button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
+
+    .setup h2 {
+      margin-top: 10%;
+      font-size: 24pt;
+      letter-spacing: 1em;
+      font-weight: 100;
+      margin-right: -1em;
+      margin-bottom: 10%;
+    }
+
+    .setup input {
+      border: 0;
+      padding: 10px;
+      font-size: 20pt;
+      background-color: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      border: solid 1px #fff;
+      /*border: 0;*/
+      margin: 0 0 20px;
+      width: 60%;
+      min-width: 240px;
+      text-align: center
+    }
+
+    .setup button {
+      /*border: solid 1px #fff;*/
+      border: 0;
+      padding: 10px 20px;
+      margin: 0 0 20px;
+      font-size: 15pt;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    #backhome {
+      position: absolute;
+      left: 50%;
+      bottom: 10%;
+      -webkit-transform: translateX(-50%);
+    }
+
+    .menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      text-align: center;
+      line-height: 3em;
+    }
+
+    .menu button{
+      height: 2em;
+      border: 1px solid white;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 4px 10px;
+      color: white;
+      font-size: 11pt;
+    }
+
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <script src="http://code.createjs.com/easeljs-0.7.1.min.js"></script>
@@ -57,12 +118,21 @@
   <script src="light.js"></script>
 </head>
 <body>
-  <div id="in">
-    <p>light</p>
+  <canvas id="testCanvas"></canvas>
+  <div class="menu">
+    <br>
+    <h2>OMOCHI NAME</h2>
+    <button id="back">BACK</button>
+  </div>
+  <div class="setup">
+    <h2>NAME THIS OMOCHI</h2>
     <form action="" id="makelight">
-      <input id="l"/><button>make light</button>
+      <input id="l"/><br>
+      <button>SUBMIT</button><br>
+    </form>
+    <form action="/" id="backhome">
+      <button>BACK HOME</button>
     </form>
   </div>
-  <canvas id="testCanvas"></canvas>
 </body>
 </html>

@@ -1,5 +1,6 @@
 var canvas, stage;
-var circle, text;
+var circle;
+// var text;
 var update = true;
 var canvasHalfW, canvasHalfH;
 var r;
@@ -19,9 +20,9 @@ function init()
   createjs.Touch.enable(stage);
 
   // Create a new Text object:
-  text = new createjs.Text("Hello World!", "36px Arial", "#fff");
-  text.textAlign = 'center';
-  text.textBaseline = 'middle';
+  // text = new createjs.Text("Hello World!", "36px Arial", "#fff");
+  // text.textAlign = 'center';
+  // text.textBaseline = 'middle';
 
   circle = new createjs.Shape();
   r = 100;
@@ -37,7 +38,7 @@ function init()
   // add the text as a child of the stage. This means it will be drawn any time the stage is updated
   // and that its transformations will be relative to the stage coordinates:
   stage.addChild(circle);
-  stage.addChild(text);
+  // stage.addChild(text);
 
   createjs.Ticker.addEventListener("tick", tick);
 
@@ -47,12 +48,24 @@ function init()
   var socket = io();
   var lightname;
 
+  $('#makelight input').focus();
+
+  $('.menu').hide();
   $('#makelight').submit(function(){
+    $('.setup').fadeOut();
+    $('.menu').fadeIn();
+
     lightname = $('#l').val();
-    text.text = lightname;
+    // text.text = lightname;
+    $('.menu h2').text(lightname);
     update = true;
     socket.emit('make light', {value: lightname});
     return false;
+  });
+
+  $('.menu #back').on('touchend', function(){
+    $('.setup').fadeIn();
+    $('.menu').fadeOut();
   });
 
   socket.on('chat message', function(msg){
@@ -82,8 +95,8 @@ function resize() {
   canvasHalfH = canvas.height/2;
 
   // position the text on screen, relative to the stage coordinates:
-  text.x = canvasHalfW;
-  text.y = canvasHalfH;
+  // text.x = canvasHalfW;
+  // text.y = canvasHalfH;
 
   circle.graphics.clear().beginFill('#0ff').drawCircle(canvasHalfW, canvasHalfH, r);
 

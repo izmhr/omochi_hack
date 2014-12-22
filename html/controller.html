@@ -17,7 +17,7 @@
       height: 100%;
     }
     body {
-      background-color: #FFFA00;
+      background-color: #FF3333;
       color: white;
     }
     .c {
@@ -26,16 +26,32 @@
     .header {
       width: 100%;
       height: 50px;
-      background-color: #FF3333;
+      /*background-color: #FF3333;*/
+      position: absolute;
+      top: 0;
+      left :0;
     }
-    .header #back {
+    /*.header #back {
       font-size: 12pt;
       line-height: 50px;
       vertical-align: middle;
       margin-left: 12pt;
+    }*/
+    .header button{
+      height: 2em;
+      border: 1px solid white;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 4px 10px;
+      color: white;
+      font-size: 11pt;
+      line-height: 11pt;
+      position: absolute;
+      top: 25px;
+      left: 10px;
+      -webkit-transform: translateY(-50%);
     }
     .header #lightname {
-      font-size: 12pt;
+      font-size: 11pt;
       line-height: 50pt;
       position: absolute;
       top: 25px;
@@ -44,6 +60,7 @@
     }
     .bgs {
       width: 100%;
+      height: 100%;
     }
     .bg_candidate {
       width: 100%;
@@ -59,7 +76,7 @@
     .color_wheel {
       width: 80%;
       position: absolute;
-      top: 55%;
+      top: 50%;
       left: 50%;
       -webkit-transform: translate(-50%, -50%);
     }
@@ -142,7 +159,7 @@
 </head>
 <body>
   <div class="header">
-    <p id='back'>&lt;BACK</p>
+    <button id='back'>BACK</button>
     <p id='lightname'>MOCHI MOCHI</p>
   </div>
   <div class="bgs">

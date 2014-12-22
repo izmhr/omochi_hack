@@ -4,8 +4,8 @@ function init()
     e.preventDefault();
   });
 
-  var bgs_height = $('body').height() - $('.header').height();
-  $('.bgs').height(bgs_height);
+  // var bgs_height = $('body').height() - $('.header').height();
+  // $('.bgs').height(bgs_height);
 
   $('#joinlight input').focus();
 
@@ -33,8 +33,10 @@ function init()
     return false;
   });
 
+  $('.header').hide();
   $('#back').on('touchend', function() {
     $('.setup').fadeIn();
+    $('.header').fadeOut();
   });
 
   $('#backhome').submit(function(){
@@ -56,6 +58,7 @@ function init()
 
   $('#joinlight').submit(function(){
     $('.setup').fadeOut();
+    $('.header').fadeIn();
 
     var lightname = $('#l').val();
     $('#lightname').text(lightname);
