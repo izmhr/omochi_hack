@@ -87,9 +87,8 @@ function init()
     $('body').attr('id', id);
   });
 
-  window.onbeforeunload = function(){
+  window.onpagehide = function(){
     socket.emit('destroy light', {value: lightname});
-    alert('onunload');
   }
 }
 
