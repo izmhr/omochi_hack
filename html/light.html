@@ -75,21 +75,27 @@
     }
 
     .setup button {
-      /*border: solid 1px #fff;*/
-      border: 0;
-      padding: 10px 20px;
+      border: solid 1px #fff;
+      /*border: 0;*/
+      padding: 1em;
       margin: 0 0 20px;
-      font-size: 15pt;
+      font-size: 11pt;
       background-color: rgba(255, 255, 255, 0.2);
       color: #fff;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      width: 150px;
+      /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);*/
     }
 
-    #backhome {
+    .setup #backhome button {
+    }
+
+    #backhome button{
       position: absolute;
       left: 50%;
       bottom: 10%;
       -webkit-transform: translateX(-50%);
+      font-size: 9pt;
+      padding: 0.5em;
     }
 
     .menu {
@@ -108,6 +114,7 @@
       padding: 4px 10px;
       color: white;
       font-size: 11pt;
+      line-height: 11pt;
     }
 
   </style>
