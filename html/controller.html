@@ -74,15 +74,23 @@
       right: 0;
     }
     .color_wheel {
-      width: 80%;
+      width: 300px;
+      /*width: 60%;*/
+      height: 300px;
       position: absolute;
       top: 50%;
       left: 50%;
       -webkit-transform: translate(-50%, -50%);
+      background-color: white;
+      border-radius: 50%;
+      /*overflow: hidden;*/
+      background-image: url(assets/cw_600.png);
+      background-position: 50% 50%;
     }
-    .color_wheel img{
+/*    .color_wheel img{
       width: 100%;
-    }
+      border-radius: 80%;
+    }*/
 
     .setup {
       text-align: center;
@@ -174,7 +182,7 @@
   </div>
   <pre class="output"></pre>
   <div class="color_wheel">
-    <img src="assets/cw_600.png"/>
+    <!-- <img src="assets/cw_600.png"/> -->
   </div>
   <div class="setup">
     <h2>CONNECT TO OMOCHI</h2>
