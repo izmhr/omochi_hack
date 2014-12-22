@@ -34,14 +34,18 @@ io.on('connection', function(socket){
   socket.on('make light', function(data){
     var lightname = data.value;
     var ret = {};
+    console.log(lightlist);
     if(socket.rooms[1] == lightname){
-      // 今使っている部屋の名前おもう一度入れたらそのまま何もしない
+      // 今使っている部屋の名前をいれたら、何もしない
       ret.res = 'self';
-    }else if(!lightlist[lightname]){
+    } else if (!lightlist[lightname]){
       console.log('no such light');
       lightlist[lightname] = 1;
       ret.res = true;
       ret.lightname = lightname;
+      if(socket.rooms.length == 2) {
+        socket.leave(socket.rooms[1]);
+      }
       socket.join(lightname);
     } else {
       ret.res = false;
@@ -76,7 +80,9 @@ io.on('connection', function(socket){
       console.log('find light');
       if(socket.rooms.length == 2){
         console.log('reduce light');
-        socket.leave(socket.rooms[1]);
+        var leaveLightName = socket.rooms[1];
+        delete lightlist[leaveLightName];
+        socket.leave(leaveLightName);
       }
       socket.join(lightname);
     }
