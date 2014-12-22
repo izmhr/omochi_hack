@@ -3,6 +3,7 @@ var circle;
 var update = true;
 var canvasHalfW, canvasHalfH;
 var r;
+var rgb = 'rgb(0, 255, 255)';
 
 function init()
 {
@@ -24,7 +25,7 @@ function init()
 
   circle.on('pressmove', function(e){
     r = (new Victor(e.stageX - canvasHalfW, e.stageY - canvasHalfH)).length();
-    circle.graphics.clear().beginFill('#0ff').drawCircle(canvasHalfW, canvasHalfH, r);
+    circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
     console.log(r);
     update = true;
   });
@@ -39,27 +40,29 @@ function init()
   resize();
 
   var socket = io();
-  var lightname;
+  var lightname = '';
 
   $('#makelight input').focus();
 
   $('.menu').hide();
   $('.msg').hide();
   $('#makelight').submit(function(){
-    lightname = $('#l').val();
-    if(lightname == ''){
+    var _lightname = $('#l').val();
+    if(_lightname == ''){
       $('.msg').text('PLEASE INPUT OMOCHI NAME').fadeIn(200).delay(2000).fadeOut();
       return false;
     }
-    socket.emit('make light', {value: lightname});
+    socket.emit('make light', {value: _lightname});
     return false;
   });
 
   socket.on('make light result', function(ret){
     if(ret.res == 'self') {
+      lightname = ret.lightname;
       $('.setup').fadeOut();
-      $('.menu').fadeIn();      
+      $('.menu').fadeIn();
     }else if(ret.res == true){
+      lightname = ret.lightname;
       $('.setup').fadeOut();
       $('.menu').fadeIn();
       $('.menu h2').text(lightname);
@@ -76,7 +79,7 @@ function init()
 
   socket.on('chat message', function(msg){
     var color = msg;
-    var rgb = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
+    rgb = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
     circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
     update = true;
   });

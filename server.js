@@ -38,6 +38,7 @@ io.on('connection', function(socket){
     if(socket.rooms[1] == lightname){
       // 今使っている部屋の名前をいれたら、何もしない
       ret.res = 'self';
+      ret.lightname = lightname;
     } else if (!lightlist[lightname]){
       console.log('no such light');
       lightlist[lightname] = 1;
