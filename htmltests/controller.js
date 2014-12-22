@@ -15,27 +15,24 @@ function init()
     // event.preventDefault();
     if(!this.canvas){
       this.canvas = $('<canvas />')[0];
-      this.canvas.width = this.width;
-      this.canvas.height = this.height;
-      this.canvas.getContext('2d').drawImage(this, 0, 0, this.width, this.height);
-      // var color_wheel = new Image();
-      // color_wheel.src = 'assets/cw_600.png';
+      this.canvas.width = this.clientWidth;
+      this.canvas.height = this.clientHeight;
+      var color_wheel = new Image();
+      color_wheel.src = 'assets/cw_600.png';
 
-      // thiz = this;
+      thiz = this;
 
-      // color_wheel.onload = function(){
-      //   thiz.canvas.getContext('2d').drawImage(color_wheel, 0, 0, thiz.width, thiz.height);
-      //   console.log('wrote image');
-      // };
+      color_wheel.onload = function(){
+        thiz.canvas.getContext('2d').drawImage(color_wheel, 0, 0, thiz.clientWidth, thiz.clientHeight);
+        console.log('wrote image');
+      };
     }
 
-    console.log(event);
     var t = event.originalEvent.changedTouches[0];
-    // var wheelShiftX = t.target.x - t.target.width/2;
-    // var wheelShiftY = t.target.y - t.target.height/2;
-    // console.log(t, wheelShiftX);
-    // var pixelData = this.canvas.getContext('2d').getImageData(t.clientX - wheelShiftX, t.clientY - wheelShiftY, 1, 1).data;
-    var pixelData = this.canvas.getContext('2d').getImageData(200, 200, 1, 1).data;
+    console.log(t);
+    var wheelShiftX = t.target.offsetLeft - t.target.offsetWidth/2;
+    var wheelShiftY = t.target.offsetTop - t.target.offsetHeight/2;
+    var pixelData = this.canvas.getContext('2d').getImageData(t.clientX - wheelShiftX, t.clientY - wheelShiftY, 1, 1).data;
 
     $('.output').html('R: ' + pixelData[0] + '<br>G: ' + pixelData[1] + '<br>B: ' + pixelData[2] + '<br>A: ' + pixelData[3] + '<br>x: ' + t.pageX + '<br>y: ' + t.pageY);
 
