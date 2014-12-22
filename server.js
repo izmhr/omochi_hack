@@ -44,7 +44,10 @@ io.on('connection', function(socket){
       ret.res = true;
       ret.lightname = lightname;
       if(socket.rooms.length == 2) {
-        socket.leave(socket.rooms[1]);
+        var leaveLightName = socket.rooms[1];
+        // delete lightlist[leaveLightName];
+        // socket.leave(leaveLightName);
+        destroylight(leaveLightName);
       }
       socket.join(lightname);
     } else {
@@ -56,12 +59,18 @@ io.on('connection', function(socket){
 
   socket.on('destroy light', function(data){
     var lightname = data.value;
+    destroylight(lightname);
+  });
+
+  function destroylight(lightname) {
     console.log('destroy light');
     delete lightlist[lightname];
+    socket.leave(lightname);
+
     console.log(lightlist);
 
     io.to(socket.rooms[1]).emit('destroyed');
-  });
+  };
 
   // from controller
   socket.on('connect light', function(data){
@@ -79,9 +88,9 @@ io.on('connection', function(socket){
       ret.lightname = lightname;
       console.log('find light');
       if(socket.rooms.length == 2){
-        console.log('reduce light');
+        // console.log('reduce light');
         var leaveLightName = socket.rooms[1];
-        delete lightlist[leaveLightName];
+        // delete lightlist[leaveLightName];
         socket.leave(leaveLightName);
       }
       socket.join(lightname);

@@ -93,7 +93,9 @@ socket.on('connectresult', function(ret){
   // });
 
 socket.on('destroyed', function(){
-  $('#messages').append($('<li>').text('target light is destroyed'));
+  console.log('connected light is destroyed');
+  $('.setup').fadeIn();
+  $('.header').fadeOut();
   socket.emit('leave light');
 });
 }
