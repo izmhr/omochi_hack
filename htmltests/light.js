@@ -47,6 +47,7 @@ function init()
   stage.addChild(circle);
 
   createjs.Ticker.addEventListener("tick", tick);
+  createjs.Ticker.setFPS(30);
 
   window.onresize = resize;
   resize();
@@ -101,7 +102,12 @@ function init()
     console.log('bg change');
 
     $currentBG = $nextBG;
+
+    // 現在と同じ物を使おうとした場合は何もしない
+    if($nextBG.selector === ('#' + id)) return;
     $nextBG = $('#' + id);
+
+    console.log($nextBG.selector);
     
     clearTimeout(bgtimer);
     $nextBG.css({opacity: 1.0, 'z-index': -2});
@@ -138,6 +144,7 @@ function tick(event) {
   if (update) {
     update = false; // only update once
     colorGradation();
+    // bgRotate(event);
     stage.update(event);
   }
 }
@@ -180,6 +187,17 @@ function startBGGradation() {
   }
 
   bgtimer = setTimeout(startBGGradation, bgChangeInterval);
+}
+
+var bgdeg = 0;
+
+function bgRotate(event) {
+  update = true;
+  bgdeg += event.delta/400;
+  if(bgdeg >= 360) bgdeg -= 360;
+  $('.bgwrap').css({
+    transform: 'rotate(' + bgdeg + ')'
+  });
 }
 
 $(init);
