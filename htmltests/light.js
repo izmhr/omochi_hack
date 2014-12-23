@@ -90,7 +90,10 @@ function init()
     $('body').attr('id', id);
   });
 
-  window.onpagehide = function(){
+  window.onpagehide = destroylight;
+  window.onbeforeunload = destroylight;
+
+  function destroylight(){
     socket.emit('destroy light', {value: lightname});
   }
 }

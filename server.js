@@ -18,14 +18,19 @@ app.get('/light', function(req, res){
 });
 
 var count = 0;  // 人数
-var lightlist = {};
+var lightlist = [];
 
 io.on('connection', function(socket){
   count++;
   console.log('a user connected: ' + count);
 
-  socket.on('disconnect', function(){
-    console.log(socket.rooms);
+  socket.on('disconnect', function(event){
+    console.log(socket.id);
+    for(var i = 0; i < lightlist.length; i++){
+      if(lightlist[i].id == socket.id) {
+        destroylight(socket);
+      }
+    }
     count--;
     console.log('user disconnected: ' + count);
   });
@@ -34,44 +39,97 @@ io.on('connection', function(socket){
   socket.on('make light', function(data){
     var lightname = data.value;
     var ret = {};
-    console.log(lightlist);
     if(socket.rooms[1] == lightname){
       // 今使っている部屋の名前をいれたら、何もしない
+      console.log('self room');
       ret.res = 'self';
       ret.lightname = lightname;
-    } else if (!lightlist[lightname]){
-      console.log('no such light');
-      lightlist[lightname] = 1;
-      ret.res = true;
-      ret.lightname = lightname;
-      if(socket.rooms.length == 2) {
-        var leaveLightName = socket.rooms[1];
-        // delete lightlist[leaveLightName];
-        // socket.leave(leaveLightName);
-        destroylight(leaveLightName);
-      }
-      socket.join(lightname);
     } else {
-      ret.res = false;
-      console.log('already exist');
+      if(lightlist.length >= 1){
+        var i = 0;
+        for( i = 0; i < lightlist.length; i++) {
+          if(lightlist[i].name === lightname) {
+            //すでに存在していたら
+            ret.res = false;
+            console.log('already exist');
+          }
+        }
+        if(i == lightlist.length) {
+          // 全部検索したが同名のライトが作られていなかったら
+          console.log('unique light name');
+          ret.res = true;
+          ret.lightname = lightname;
+          makelight(socket, lightname);
+        }
+      } else {
+        // ライトが一個も作られていなかったら
+        console.log('first light');
+        ret.res = true;
+        ret.lightname = lightname;
+        makelight(socket, lightname);
+      }
     }
+    // } else if (!lightlist[socket.id]){
+    //   console.log('no such light');
+    //   lightlist[socket.id] = lightname;
+    //   ret.res = true;
+    //   ret.lightname = lightname;
+    //   if(socket.rooms.length == 2) {
+    //     var leaveLightName = socket.rooms[1];
+    //     // delete lightlist[leaveLightName];
+    //     // socket.leave(leaveLightName);
+    //     destroylight(socket);
+    //   }
+    //   socket.join(lightname);
+    // } else {
+    //   ret.res = false;
+    //   console.log('already exist');
+    // }
+    console.log(lightlist);
     socket.emit('make light result', ret);
   });
 
+  function makelight(socket, lightname){
+    lightlist.push({id:socket.id, name:lightname});
+    if(socket.rooms.length == 2){
+      destroylight(socket);
+    }
+    socket.join(lightname);
+  };
+
   socket.on('destroy light', function(data){
     var lightname = data.value;
-    destroylight(lightname);
+    destroylight(socket);
   });
 
-  function destroylight(lightname) {
+  function destroylight(socket) {
+    var destroyedLightName = '';
     console.log('destroy light');
-    delete lightlist[lightname];
-    socket.leave(lightname);
+    for(var i = 0; i < lightlist.length; i++ ){
+      if( lightlist[i].id == socket.id ){
+        var destroyedLightName = lightlist[i].name;
+        lightlist.splice(i,1);
+        socket.leave(destroyedLightName);
+        break;
+      }
+    }
+    // var lightname = lightlist[socket.id];
+    // delete lightlist[socket.id];
+    // socket.leave(lightname);
 
     console.log(lightlist);
 
-    io.to(socket.rooms[1]).emit('destroyed');
+    // コントローラに教えてあげる
+    io.to(destroyedLightName).emit('destroyed');
   };
+
+  // socket.on('light dis', function(){
+  //   console.log('★light dis★');
+  // });
+
+  // socket.on('light reconnect', function(){
+  //   console.log('★light reconnect★');
+  // });
 
   // from controller
   socket.on('connect light', function(data){
@@ -80,22 +138,43 @@ io.on('connection', function(socket){
     if(socket.rooms[1] == lightname){
       // 今使っている部屋にもう一度繋ごうとしたら何もしない
       ret.res = 'self';
-    }else if(!lightlist[lightname]){
-      // 使っていない
-      ret.res = false;
-      console.log('no such light');
     } else {
-      ret.res = true;
-      ret.lightname = lightname;
-      console.log('find light');
-      if(socket.rooms.length == 2){
-        // console.log('reduce light');
-        var leaveLightName = socket.rooms[1];
-        // delete lightlist[leaveLightName];
-        socket.leave(leaveLightName);
+      var i = 0;
+      for( ; i < lightlist.length; i++ ){
+        if( lightlist[i].name === lightname ) {
+          ret.res = true;
+          ret.lightname = lightname;
+          console.log('find light');
+          if(socket.rooms.length == 2) {
+            // この回線で既に別のライトに繋いで居たら、そっちとはお別れする
+            var leaveLightName = socket.rooms[1];
+            socket.leave(leaveLightName);
+          }
+          socket.join(lightname);
+          break;
+        }
       }
-      socket.join(lightname);
+      if( i == lightlist.length ) {
+        console.log('no such light');
+        ret.res = false;
+      }
     }
+    // }else if(!lightlist[lightname]){
+    //   // 使っていない
+    //   ret.res = false;
+    //   console.log('no such light');
+    // } else {
+    //   ret.res = true;
+    //   ret.lightname = lightname;
+    //   console.log('find light');
+    //   if(socket.rooms.length == 2){
+    //     // console.log('reduce light');
+    //     var leaveLightName = socket.rooms[1];
+    //     // delete lightlist[leaveLightName];
+    //     socket.leave(leaveLightName);
+    //   }
+    //   socket.join(lightname);
+    // }
     socket.emit('connectresult', ret);
   });
 
