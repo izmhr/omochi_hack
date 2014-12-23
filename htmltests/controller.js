@@ -74,6 +74,10 @@ function init()
     $('.setup').fadeIn();
     $('.header').fadeOut();
   });
+  $('#auto').on('click', function() {
+    console.log('auto');
+    socket.emit('auto');
+  })
 
   $('#backhome').submit(function(){
     return true;

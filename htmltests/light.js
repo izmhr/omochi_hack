@@ -115,6 +115,14 @@ function init()
     $currentBG.transition({opacity: 0.0});
   });
 
+  socket.on('auto', function(){
+    auto = true;
+    update = true;
+    clearTimeout(bgtimer);
+    setupBGGradation();
+    setTimeout(startBGGradation, 1000);
+  });
+
   window.onpagehide = destroylight;
   window.onbeforeunload = destroylight;
 
@@ -153,7 +161,7 @@ function colorGradation() {
   if(auto){
     update = true;
     // console.log('color update');
-    hsv.h += 2;
+    hsv.h += 1;
     if(hsv.h == 360) hsv.h = 0;
     var _RGB = HSVtoRGB(hsv.h, hsv.s, hsv.v);
     rgb = 'rgb(' + _RGB.r + ', ' + _RGB.g + ', ' + _RGB.b + ')';
@@ -163,6 +171,8 @@ function colorGradation() {
 
 function setupBGGradation() {
   var $bg = $('#bg1').css({opacity: 1.0, 'z-index': -1});
+  currentBGNo = 1;
+  nextBGNo = 2;
   for( var i = 2; i <= bgmax; i++ ) {
     $bg = $('#bg' + i);
     $bg.css({opacity: 0.0, 'z-index': -2});

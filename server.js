@@ -197,6 +197,11 @@ io.on('connection', function(socket){
     console.log('bg change');
     io.to(room).emit('bg change', data);
   });
+
+  socket.on('auto', function(){
+    var room = socket.rooms[1];
+    io.to(room).emit('auto');
+  });
 });
 
 http.listen(3000, function(){
