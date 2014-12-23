@@ -8,13 +8,14 @@ var auto = true;
 var hsv = {h: 0, s: 255, v: 255};
 
 // 背景グラデーションに関する
+var bgtimer;
 var bgmax = 5;
 var currentBGNo = 1;
 var nextBGNo = 2;
 var $currentBG = $('#bg' + currentBGNo);
 var $nextBG = $('#bg' + nextBGNo);
-var bgChangeInterval = 12000;
-var bgGradationTime = 3000;
+var bgChangeInterval = 4000;
+var bgGradationTime = 2000;
 
 function init()
 {
@@ -96,10 +97,16 @@ function init()
     update = true;
   });
 
-  socket.on('bg change', function(data){
-    var id = data;
+  socket.on('bg change', function(id){
     console.log('bg change');
-    $('body').attr('id', id);
+
+    $currentBG = $nextBG;
+    $nextBG = $('#' + id);
+    
+    clearTimeout(bgtimer);
+    $nextBG.css({opacity: 1.0, 'z-index': -2});
+    $currentBG.css({opacity: 1.0, 'z-index': -1});
+    $currentBG.transition({opacity: 0.0});
   });
 
   window.onpagehide = destroylight;
@@ -172,7 +179,7 @@ function startBGGradation() {
     nextBGNo = 1;
   }
 
-  setTimeout(startBGGradation, bgChangeInterval);
+  bgtimer = setTimeout(startBGGradation, bgChangeInterval);
 }
 
 $(init);
