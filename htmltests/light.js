@@ -4,6 +4,17 @@ var update = true;
 var canvasHalfW, canvasHalfH;
 var r;
 var rgb = 'rgb(0, 255, 255)';
+var auto = true;
+var hsv = {h: 0, s: 255, v: 255};
+
+// 背景グラデーションに関する
+var bgmax = 5;
+var currentBGNo = 1;
+var nextBGNo = 2;
+var $currentBG = $('#bg' + currentBGNo);
+var $nextBG = $('#bg' + nextBGNo);
+var bgChangeInterval = 12000;
+var bgGradationTime = 3000;
 
 function init()
 {
@@ -78,6 +89,7 @@ function init()
   });
 
   socket.on('chat message', function(msg){
+    auto = false;
     var color = msg;
     rgb = 'rgb(' + color[0] + ', ' + color[1] + ', ' + color[2] + ')';
     circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
@@ -96,6 +108,9 @@ function init()
   function destroylight(){
     socket.emit('destroy light', {value: lightname});
   }
+
+  setupBGGradation();
+  setTimeout(startBGGradation, bgChangeInterval);
 }
 
 function resize() {
@@ -115,8 +130,49 @@ function tick(event) {
   // this set makes it so the stage only re-renders when an event handler indicates a change has happened.
   if (update) {
     update = false; // only update once
+    colorGradation();
     stage.update(event);
   }
+}
+
+function colorGradation() {
+  if(auto){
+    update = true;
+    // console.log('color update');
+    hsv.h += 2;
+    if(hsv.h == 360) hsv.h = 0;
+    var _RGB = HSVtoRGB(hsv.h, hsv.s, hsv.v);
+    rgb = 'rgb(' + _RGB.r + ', ' + _RGB.g + ', ' + _RGB.b + ')';
+    circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
+  }
+}
+
+function setupBGGradation() {
+  var $bg = $('#bg1').css({opacity: 1.0, 'z-index': -1});
+  for( var i = 2; i <= bgmax; i++ ) {
+    $bg = $('#bg' + i);
+    $bg.css({opacity: 0.0, 'z-index': -2});
+  }
+}
+
+function startBGGradation() {
+  console.log('bg gradation loop: current=' + currentBGNo + ' next=' + nextBGNo);
+  $currentBG = $('#bg' + currentBGNo);
+  $nextBG = $('#bg' + nextBGNo);
+
+  $nextBG.css({opacity: 1.0, 'z-index': -2});
+  $currentBG.css({opacity: 1.0, 'z-index': -1});
+  $currentBG.transition({opacity: 0, duration: bgGradationTime});
+
+  currentBGNo += 1;
+  nextBGNo += 1;
+  if(currentBGNo > bgmax) {
+    currentBGNo = 1;
+  } else if ( currentBGNo == bgmax ) {
+    nextBGNo = 1;
+  }
+
+  setTimeout(startBGGradation, bgChangeInterval);
 }
 
 $(init);
