@@ -7,7 +7,7 @@ var rgb = 'rgb(0, 255, 255)';
 
 function init()
 {
-  $(window).on('touchmove', function(e){
+  $(window).on('touchmove mousemove', function(e){
     e.preventDefault();
   });
   // get a reference to the canvas we'll be working with:
@@ -72,7 +72,7 @@ function init()
     }
   });
 
-  $('.menu #back').on('touchend', function(){
+  $('.menu #back').on('click', function(){
     $('.setup').fadeIn();
     $('.menu').fadeOut();
   });
