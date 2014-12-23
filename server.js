@@ -46,15 +46,18 @@ io.on('connection', function(socket){
       ret.lightname = lightname;
     } else {
       if(lightlist.length >= 1){
+        var found = false;
         var i = 0;
         for( i = 0; i < lightlist.length; i++) {
           if(lightlist[i].name === lightname) {
             //すでに存在していたら
             ret.res = false;
             console.log('already exist');
+            found = true;
+            break;
           }
         }
-        if(i == lightlist.length) {
+        if(i == lightlist.length && !found) {
           // 全部検索したが同名のライトが作られていなかったら
           console.log('unique light name');
           ret.res = true;
