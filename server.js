@@ -1,9 +1,12 @@
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
+
+var favicon = require('serve-favicon');
 var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/static'));
+app.use(favicon(__dirname + '/static/assets/favicon.ico'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/html/index.html');
