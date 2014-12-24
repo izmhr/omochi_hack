@@ -14,8 +14,8 @@ var currentBGNo = 1;
 var nextBGNo = 2;
 var $currentBG = $('#bg' + currentBGNo);
 var $nextBG = $('#bg' + nextBGNo);
-var bgChangeInterval = 4000;
-var bgGradationTime = 2000;
+var bgChangeInterval = 30000;
+var bgGradationTime = 4000;
 
 function init()
 {
