@@ -124,10 +124,12 @@ function init()
   });
 
   window.onpagehide = destroylight;
-  window.onbeforeunload = destroylight;
+  // window.onbeforeunload = destroylight;
 
   function destroylight(){
-    socket.emit('destroy light', {value: lightname});
+    if(lightname !== ''){
+      socket.emit('destroy light', {value: lightname});
+    }
   }
 
   setupBGGradation();

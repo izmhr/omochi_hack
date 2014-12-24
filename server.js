@@ -24,6 +24,8 @@ app.get('/light', function(req, res){
 
 var count = 0;  // 人数
 var lightlist = [];
+var lightTotal = 0;
+var userTotal = 0;
 
 
 //----------------------------------------------
@@ -40,8 +42,9 @@ logger.info('this is request log');
 
 io.on('connection', function(socket){
   count++;
+  userTotal++;
   console.log('a user connected: ' + count);
-  logger.trace('a user connected: ' + socket.id + ', ' + count);
+  logger.trace('connected: ' + socket.id + ' count: ' + count + ' total: ' + userTotal);
 
   socket.on('disconnect', function(event){
     console.log(socket.id);
@@ -52,7 +55,7 @@ io.on('connection', function(socket){
     }
     count--;
     console.log('user disconnected: ' + count);
-    logger.trace('user disconnected: ' + socket.id + ', ' + count);
+    logger.trace('disconnected: ' + socket.id + ' count: ' + count);
   });
 
   // from light
@@ -97,11 +100,15 @@ io.on('connection', function(socket){
   });
 
   function makelight(socket, lightname){
-    lightlist.push({id:socket.id, name:lightname});
+    lightTotal += 1;
+    var madeTime = (new Date()).getTime();
+    lightlist.push({id:socket.id, name:lightname, time:madeTime});
     if(socket.rooms.length == 2){
       destroylight(socket);
     }
     socket.join(lightname);
+
+    logger.trace('makelight name: ' + lightname + ' id: ' + socket.id + ' total: ' + lightTotal + ' currentnum: ' + lightlist.length);
   };
 
   socket.on('destroy light', function(data){
@@ -112,9 +119,11 @@ io.on('connection', function(socket){
   function destroylight(socket) {
     var destroyedLightName = '';
     console.log('destroy light');
+    var madeTime = 0;
     for(var i = 0; i < lightlist.length; i++ ){
       if( lightlist[i].id == socket.id ){
         var destroyedLightName = lightlist[i].name;
+        madeTime = lightlist[i].time;
         lightlist.splice(i,1);
         socket.leave(destroyedLightName);
         break;
@@ -122,6 +131,8 @@ io.on('connection', function(socket){
     }
 
     console.log(lightlist);
+    var destroyedTime = (new Date()).getTime();
+    logger.trace('destroylight: ' + destroyedLightName + ' id: ' + socket.id + ' duration: ' + (destroyedTime - madeTime) + ' total: ' + lightTotal + ' remaining: ' + lightlist.length);
 
     // コントローラに教えてあげる
     io.to(destroyedLightName).emit('destroyed');
@@ -147,6 +158,7 @@ io.on('connection', function(socket){
             socket.leave(leaveLightName);
           }
           socket.join(lightname);
+          logger.trace('connectlight name: ' + lightname + ' id: ' + socket.id);
           break;
         }
       }
