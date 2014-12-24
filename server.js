@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 
 var favicon = require('serve-favicon');
+var log4js = require('log4js');
+
 var io = require('socket.io')(http);
 
 app.use(express.static(__dirname + '/static'));
@@ -23,9 +25,23 @@ app.get('/light', function(req, res){
 var count = 0;  // 人数
 var lightlist = [];
 
+
+//----------------------------------------------
+// log4js
+// http://www.yoheim.net/blog.php?q=20130903
+// 設定を行います
+log4js.configure('log4js_setting.json');
+
+// リクエストログ用のLoggerを取得して、ログ出力します。
+var logger = log4js.getLogger('request');
+logger.info('this is request log');
+//----------------------------------------------
+
+
 io.on('connection', function(socket){
   count++;
   console.log('a user connected: ' + count);
+  logger.trace('a user connected: ' + socket.id + ', ' + count);
 
   socket.on('disconnect', function(event){
     console.log(socket.id);
@@ -36,6 +52,7 @@ io.on('connection', function(socket){
     }
     count--;
     console.log('user disconnected: ' + count);
+    logger.trace('user disconnected: ' + socket.id + ', ' + count);
   });
 
   // from light
@@ -44,7 +61,6 @@ io.on('connection', function(socket){
     var ret = {};
     if(socket.rooms[1] == lightname){
       // 今使っている部屋の名前をいれたら、何もしない
-      console.log('self room');
       ret.res = 'self';
       ret.lightname = lightname;
     } else {
@@ -75,22 +91,7 @@ io.on('connection', function(socket){
         makelight(socket, lightname);
       }
     }
-    // } else if (!lightlist[socket.id]){
-    //   console.log('no such light');
-    //   lightlist[socket.id] = lightname;
-    //   ret.res = true;
-    //   ret.lightname = lightname;
-    //   if(socket.rooms.length == 2) {
-    //     var leaveLightName = socket.rooms[1];
-    //     // delete lightlist[leaveLightName];
-    //     // socket.leave(leaveLightName);
-    //     destroylight(socket);
-    //   }
-    //   socket.join(lightname);
-    // } else {
-    //   ret.res = false;
-    //   console.log('already exist');
-    // }
+
     console.log(lightlist);
     socket.emit('make light result', ret);
   });
@@ -119,23 +120,12 @@ io.on('connection', function(socket){
         break;
       }
     }
-    // var lightname = lightlist[socket.id];
-    // delete lightlist[socket.id];
-    // socket.leave(lightname);
 
     console.log(lightlist);
 
     // コントローラに教えてあげる
     io.to(destroyedLightName).emit('destroyed');
   };
-
-  // socket.on('light dis', function(){
-  //   console.log('★light dis★');
-  // });
-
-  // socket.on('light reconnect', function(){
-  //   console.log('★light reconnect★');
-  // });
 
   // from controller
   socket.on('connect light', function(data){
@@ -165,22 +155,7 @@ io.on('connection', function(socket){
         ret.res = false;
       }
     }
-    // }else if(!lightlist[lightname]){
-    //   // 使っていない
-    //   ret.res = false;
-    //   console.log('no such light');
-    // } else {
-    //   ret.res = true;
-    //   ret.lightname = lightname;
-    //   console.log('find light');
-    //   if(socket.rooms.length == 2){
-    //     // console.log('reduce light');
-    //     var leaveLightName = socket.rooms[1];
-    //     // delete lightlist[leaveLightName];
-    //     socket.leave(leaveLightName);
-    //   }
-    //   socket.join(lightname);
-    // }
+
     socket.emit('connectresult', ret);
   });
 
