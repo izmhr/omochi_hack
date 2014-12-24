@@ -36,7 +36,7 @@ function init()
   var g = circle.graphics.beginFill('#fff').drawCircle(canvasHalfW, canvasHalfH, r);
 
   circle.on('pressmove', function(e){
-    r = (new Victor(e.stageX - canvasHalfW, e.stageY - canvasHalfH)).length();
+    r = Math.sqrt( (e.stageX - canvasHalfW) * (e.stageX - canvasHalfW) + (e.stageY - canvasHalfH) * (e.stageY - canvasHalfH));
     circle.graphics.clear().beginFill(rgb).drawCircle(canvasHalfW, canvasHalfH, r);
     console.log(r);
     update = true;
