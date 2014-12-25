@@ -14,8 +14,8 @@ var currentBGNo = 1;
 var nextBGNo = 2;
 var $currentBG = $('#bg' + currentBGNo);
 var $nextBG = $('#bg' + nextBGNo);
-var bgChangeInterval = 30000;
-var bgGradationTime = 4000;
+var bgChangeInterval = 10000;
+var bgGradationTime = 2000;
 
 function init()
 {
@@ -101,25 +101,32 @@ function init()
   socket.on('bg change', function(id){
     console.log('bg change');
 
-    $currentBG = $nextBG;
-
     // 現在と同じ物を使おうとした場合は何もしない
     if($nextBG.selector === ('#' + id)) return;
-    $nextBG = $('#' + id);
 
     console.log($nextBG.selector);
     
+    // if(bgtimer){
     clearTimeout(bgtimer);
+    $currentBG = $nextBG;
+    currentBGNo = nextBGNo;
+
+    $nextBG = $('#' + id);
+    var idstr = id.substr(2,1);
+    nextBGNo = Number(idstr);
     $nextBG.css({opacity: 1.0, 'z-index': -2});
     $currentBG.css({opacity: 1.0, 'z-index': -1});
     $currentBG.transition({opacity: 0.0});
+
+    console.log("bg change finish");
   });
 
   socket.on('auto', function(){
     auto = true;
     update = true;
-    clearTimeout(bgtimer);
-    setupBGGradation();
+    if(bgtimer) clearTimeout(bgtimer);
+    // setupBGGradation();
+
     setTimeout(startBGGradation, 1000);
   });
 
@@ -133,7 +140,7 @@ function init()
   }
 
   setupBGGradation();
-  setTimeout(startBGGradation, bgChangeInterval);
+  bgtimer = setTimeout(startBGGradation, bgChangeInterval);
 }
 
 function resize() {
@@ -173,15 +180,26 @@ function colorGradation() {
 
 function setupBGGradation() {
   var $bg = $('#bg1').css({opacity: 1.0, 'z-index': -1});
-  currentBGNo = 1;
-  nextBGNo = 2;
+  currentBGNo = 5;
+  nextBGNo = 1;
   for( var i = 2; i <= bgmax; i++ ) {
     $bg = $('#bg' + i);
     $bg.css({opacity: 0.0, 'z-index': -2});
   }
+  $currentBG = $('#bg' + currentBGNo);
+  $nextBG = $('#bg' + nextBGNo);
 }
 
 function startBGGradation() {
+  currentBGNo += 1;
+  nextBGNo = currentBGNo + 1;
+  if(currentBGNo > bgmax) {
+    currentBGNo = 1;
+    nextBGNo = 2;
+  } else if ( currentBGNo == bgmax ) {
+    nextBGNo = 1;
+  }
+
   console.log('bg gradation loop: current=' + currentBGNo + ' next=' + nextBGNo);
   $currentBG = $('#bg' + currentBGNo);
   $nextBG = $('#bg' + nextBGNo);
@@ -189,14 +207,6 @@ function startBGGradation() {
   $nextBG.css({opacity: 1.0, 'z-index': -2});
   $currentBG.css({opacity: 1.0, 'z-index': -1});
   $currentBG.transition({opacity: 0, duration: bgGradationTime});
-
-  currentBGNo += 1;
-  nextBGNo += 1;
-  if(currentBGNo > bgmax) {
-    currentBGNo = 1;
-  } else if ( currentBGNo == bgmax ) {
-    nextBGNo = 1;
-  }
 
   bgtimer = setTimeout(startBGGradation, bgChangeInterval);
 }

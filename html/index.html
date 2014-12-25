@@ -14,25 +14,37 @@
       font-family: "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
     }
     body, html{
-      overflow: hidden;
+      /*overflow: hidden;*/
       height: 100%;
       background-color: #FF3333;
       color: white;
       text-align: center;
+      font-size: 11pt;
     }
+
     h1 {
-      margin-top: 10%;
+      margin-top: 5%;
       font-size: 30pt;
       letter-spacing: 1em;
       font-weight: 100;
-      /*text-indent: 1.5em;*/
       margin-right: -1em;
+      display: inline-block;
     }
     #icon {
       width: 60%;
       max-width: 300px;
     }
     #discription {
+      margin-bottom: 5%;
+    }
+
+    @media screen and (min-width: 320px) and (max-width: 480px) {
+      h1 {
+        font-size: 20pt;
+      }
+    }
+
+    .menu {
       margin-bottom: 5%;
     }
 
@@ -59,8 +71,8 @@
   ここにいろいろ説明を書くと思う。たぶん。
   </p>
   <div class="menu">
-    <a href='/controller'>CONTROLLER</a>
     <a href='/light'>OMOCHI</a>
+    <a href='/controller'>CONTROLLER</a>
   </div>
 </body>
 </html>
